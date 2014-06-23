@@ -41,6 +41,7 @@ local bit_bxor = bit32.bxor
 local bit_bnot = bit32.bnot
 local bit_lshift = bit32.lshift
 local bit_rshift = bit32.rshift
+local sort = table.sort
 
 --------------------------------------------------------------------------------
 -- Cleanup

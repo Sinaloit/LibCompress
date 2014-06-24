@@ -7,7 +7,7 @@
 -- Licence: GPL version 2 (General Public License)
 ----------------------------------------------------------------------------------
 
-local MAJOR, MINOR = "LibCompress", 1
+local MAJOR, MINOR = "LibCompress",2
 	
 local LibCompress = {}
 
@@ -64,7 +64,7 @@ local function setCleanupTables(...)
 	if tTimer then
 		tTimer:Start()
 	else
-		tTimer = ApolloTimer.Create(timeout, false, "OnCleanup", self)
+		tTimer = ApolloTimer.Create(timeout, false, "OnCleanup", LibCompress)
 	end
 	for i=1,select("#",...) do
 		tables_to_clean[(select(i, ...))] = true
@@ -751,7 +751,7 @@ function LibCompress:GetEncodeTable(reservedChars, escapeChars, mapChars)
 	end
 	
 	-- list of characters that must be encoded
-	encodeBytes = reservedChars..escapeChars..mapChars
+	local encodeBytes = reservedChars..escapeChars..mapChars
 	
 	-- build list of bytes not available as a suffix to a prefix byte
 	local taken = {}
@@ -790,7 +790,7 @@ function LibCompress:GetEncodeTable(reservedChars, escapeChars, mapChars)
 	
 	-- map single byte to double-byte
 	escapeCharIndex = escapeCharIndex +1
-	escapeChar = string.sub(escapeChars, escapeCharIndex, escapeCharIndex)
+	local escapeChar = string.sub(escapeChars, escapeCharIndex, escapeCharIndex)
 	r = 0 -- suffix char value to the escapeChar
 	decode_search = {}
 	decode_translate = {}
@@ -837,8 +837,8 @@ function LibCompress:GetEncodeTable(reservedChars, escapeChars, mapChars)
 	encode_search = "([".. escape_for_gsub(table.concat(encode_search)).."])"
 	decode_search = escape_for_gsub(escapeChars).."([".. escape_for_gsub(table.concat(decode_search)).."])"
 	
-	encode_func = assert(loadstring("return function(self, str) return str:gsub(self.encode_search, self.encode_translate); end"))()
-	decode_func = assert(loadstring(decode_func_string))()
+	local encode_func = assert(loadstring("return function(self, str) return str:gsub(self.encode_search, self.encode_translate); end"))()
+	local decode_func = assert(loadstring(decode_func_string))()
 	
 	codecTable.encode_search = encode_search
 	codecTable.encode_translate = encode_translate
@@ -913,7 +913,7 @@ function LibCompress:Encode7bit(str)
 	local encoded_size = 0
 	local l=#str
 	for i=1,l do
-		code = string.byte(str, i)
+		local code = string.byte(str, i)
 		remainder = remainder + bit_lshift(code, remainder_length)
 		remainder_length = 8 + remainder_length
 		while remainder_length>=7 do
